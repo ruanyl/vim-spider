@@ -18,12 +18,26 @@ syn keyword spiderLabel                 case default fallthrough or and
 syn keyword spiderRepeat                for in of while until
 syn keyword spiderOperator              new typeof
 syn keyword spiderFunction              func
-syn keyword spiderIdentifier            this var super extends
+syn keyword spiderIdentifier            var
+syn keyword spiderSpecialIdentifier     this super extends
 syn keyword spiderType                  Array Boolean Date Function Number Object String RegExp
 syn keyword spiderJsGlobal              console window document screen location navigator setTimeout alert console global require exports module process setTimeout JSON others...
 syn keyword spiderStatement             return
 syn keyword spiderBoolean               true false
 syn keyword spiderNull                  null undefined
+syn keyword spiderNumber                Infinity
+
+syn match spiderFuncName                /\<[a-zA-Z_$][0-9a-zA-Z_$]*/ nextgroup=spiderFuncArgs skipwhite
+syn match spiderSpecial                 "\v\\%(0|\\x\x\{2\}\|\\u\x\{4\}\|\c[A-Z]|.)" contained
+syn match spiderGlobalIdentifier        /\:\:/
+syn match spiderNumber                  /\<-\=\d\+L\=\>\|\<0[xX]\x\+\>/
+syn match spiderLineComment             "\/\/.*" contains=@Spell,spiderCommentTodo
+syn region spiderComment                start="/\*"  end="\*/" contains=@Spell,spiderCommentTodo
+
+syn region spiderFuncArgs               start='(' end=')'
+syn region spiderStringD                start=+"+  skip=+\\\\\|\\$"+  end=+"+  contains=spiderSpecial,@htmlPreproc,@Spell"
+syn region spiderStringS                start=+'+  skip=+\\\\\|\\$'+  end=+'+  contains=spiderSpecial,@htmlPreproc,@Spell'
+syn region spiderComment                start="/\*"  end="\*/" contains=@Spell,spiderCommentTodo
 
 if version >= 508 || !exists("did_javascript_syn_inits")
   if version < 508
@@ -38,13 +52,18 @@ if version >= 508 || !exists("did_javascript_syn_inits")
   HiLink spiderLabel                    Label
   HiLink spiderRepeat                   Repeat
   HiLink spiderOperator                 Operator
-  HiLink spiderFunction                 Function
-  HiLink spiderIdentifier               Identifier
-  HiLink spiderType                     Type
+  HiLink spiderFunction                 Type
+  HiLink spiderIdentifier               Type
+  HiLink spiderSpecialIdentifier        Special
+  HiLink spiderType                     Special
   HiLink spiderJsGlobal                 Special
   HiLink spiderStatement                Statement
   HiLink spiderBoolean                  Boolean
   HiLink spiderNull                     Keyword
+  HiLink spiderFuncName                 Function
+  HiLink spiderStringD                  String
+  HiLink spiderStringS                  String
+  HiLink spiderGlobalIdentifier         Special
 
   delcommand HiLink
 endif
